@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+  	<ion-buttons slot="start">
+	    <ion-button (click)="close()">
+	      <ion-icon name="close" slot="icon-only"></ion-icon>
+	    </ion-button>
+  	</ion-buttons>
+    <ion-title>Add Job</ion-title>
+    <ion-buttons slot="end">
+	    <ion-button (click)="save()">
+	      <ion-icon name="checkmark" slot="icon-only"></ion-icon>
+	    </ion-button>
+  	</ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item lines="full">
+          <ion-label position="stacked">Customer Name</ion-label>
+          <ion-input type="text" [(ngModel)]="event.customer"></ion-input>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label position="stacked">Phone</ion-label>
+          <ion-input type="text" [(ngModel)]="event.phone"></ion-input>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label position="stacked">Address</ion-label>
+          <ion-input type="text" [(ngModel)]="event.address"></ion-input>
+        </ion-item>  
+        <ion-item lines="full">
+          <ion-label position="stacked">City</ion-label>
+          <ion-input type="text" [(ngModel)]="event.city"></ion-input>
+        </ion-item>  
+        <ion-item lines="full">
+          <ion-label position="stacked">State</ion-label>
+          <ion-input type="text" [(ngModel)]="event.state"></ion-input>
+        </ion-item>  
+        <ion-item lines="full">
+          <ion-label position="stacked">Zip</ion-label>
+          <ion-input type="text" [(ngModel)]="event.zip"></ion-input>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label position="stacked">Time</ion-label>
+          <ion-datetime displayFormat="MMM DD, YYYY HH:mm" [(ngModel)]="event.startTime"></ion-datetime>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label position="stacked">Issue</ion-label>
+          <ion-input type="text" [(ngModel)]="event.issue"></ion-input>
+        </ion-item> 
+        <ion-item lines="full">
+          <ion-label position="stacked">Employee</ion-label>
+          <ion-select [(ngModel)]="event.employee"></ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

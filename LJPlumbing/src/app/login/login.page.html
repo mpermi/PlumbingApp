@@ -1,0 +1,23 @@
+<ion-header >
+  <ion-toolbar>
+    <ion-title>Sign In</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="login">
+	<br><img id="logo" src="assets/images/logo.png"><br>
+  <form (submit)="login()">
+    <ion-item>
+    	<ion-label><ion-icon name="person"></ion-icon></ion-label>
+      <ion-input [(ngModel)]="username" name="username" type="text" placeholder="Username" (keyup.enter)="login()"></ion-input>
+    </ion-item>
+    <ion-item>
+    	<ion-label><ion-icon name="key"></ion-icon></ion-label>
+      <ion-input [(ngModel)]="password" name="password" type="password" placeholder="Password" (keyup.enter)="login()"></ion-input>
+    </ion-item>
+    <ion-button class="login-btn" type="submit">Sign In</ion-button>
+  </form>
+</ion-content>
+
+
+

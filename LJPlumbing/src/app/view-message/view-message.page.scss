@@ -1,0 +1,31 @@
+.message {
+	padding: 5px;
+}
+
+.incoming_message {
+	background: var(--ion-color-view);
+	border-radius: 15px;
+}
+
+.outgoing_message {
+	background: var(--ion-color-primary-contrast);
+	border-radius: 15px;
+}
+
+.time {
+	float: right;
+}
+
+.new_message {
+	color: #000;
+	width: 100%;
+	resize: none;
+	border-radius: 10px;
+	margin-top: 2%;
+}
+
+.send_button {
+	--padding-start: 0.5em;
+	--padding-end: 1em;
+	color: var(--ion-color-primary-contrast);
+}

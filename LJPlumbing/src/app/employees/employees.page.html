@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Employees</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="addEmployee()">
+        <ion-icon name="add" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-grid>
+
+		<ion-row>
+			<ion-col size="12">
+			  <ion-list lines="full">
+			    <ion-item>
+			      <ion-col size='3'>
+			        <img class="avatar" src="assets/images/plumber-admin.png">
+			      </ion-col>
+			      <ion-col size='5'>
+			        <span class="name"><h4>Wes Butler</h4></span>
+			        <span class="title">Admin</span>
+			      </ion-col>
+			      <ion-col class="actions" size='4'>
+			        <ion-icon name="search" color="view"></ion-icon>
+			        <ion-icon name="create" color="edit"></ion-icon>
+			        <ion-icon name="trash" color="danger"></ion-icon>
+			      </ion-col>
+			    </ion-item>
+
+			    <ion-item>
+			      <ion-col size='3'>
+			        <img class="avatar" src="assets/images/plumber.png">
+			      </ion-col>
+			      <ion-col size='5'>
+			        <span class="name"><h4>Lonnie Butler</h4></span>
+			        <span class="title">Plumber</span>
+			      </ion-col>
+			      <ion-col class="actions" size='4'>
+			        <ion-icon name="search" color="view"></ion-icon>
+			        <ion-icon name="create" color="edit"></ion-icon>
+			        <ion-icon name="trash" color="danger"></ion-icon>
+			      </ion-col>
+			    </ion-item>  
+			  </ion-list>
+			</ion-col>
+	  </ion-row>
+  </ion-grid>
+</ion-content>

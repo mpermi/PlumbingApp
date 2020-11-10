@@ -1,0 +1,39 @@
+
+  .login {
+    --background: url("../../assets/images/tools.jpeg") no-repeat center;
+    --background-size: cover;
+    --color: #fff;
+  }
+
+  .item {
+    width: 80%;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+    --background: transparent;
+    --color: #fff;
+  }
+
+  ion-icon {
+    color: #fff;
+  }
+
+  ion-input{
+    --placeholder-color: #fff;
+    --placeholder-opacity: 1;
+  }
+
+  .login-btn {
+    width: 80%;
+    display: block;
+    margin: 10px auto;
+    border-radius: 5px;
+    --background: #76c0e8;
+    --color: #000;
+  }
+
+  #logo {
+    width: 50%;
+    margin: auto;
+    display: block;
+  }
