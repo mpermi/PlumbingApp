@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import {AlertController, ModalController } from '@ionic/angular';
+import { EmployeeService } from '../../services/employee.service';
+import { TitleService } from '../../services/title.service';
 
 @Component({
   selector: 'app-edit-employee',
@@ -7,18 +9,19 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./edit-employee.page.scss'],
 })
 export class EditEmployeePage implements OnInit {
-  employee = {
-        first_name: '',
-        last_name: '',
-        username: '',
-        password: '',
-        phone: '',
-        title: ''
-      };
+  employee;
+  title;
 
-  constructor(private modalCtrl: ModalController) { }
+  constructor(
+    private modalCtrl: ModalController,
+    private alertCtrl: AlertController,
+    private employeeService: EmployeeService,
+    private titleService: TitleService) { }
 
   ngOnInit() {
+    this.titleService.getTitles().subscribe(result => {
+      this.title = result.data;
+    });
   }
 
   close() {
