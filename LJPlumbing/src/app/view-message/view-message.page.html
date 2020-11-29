@@ -1,22 +1,27 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>View Message</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="home"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
 <ion-row *ngFor="let message of messages" class="message">
-	<ion-col size="9" *ngIf="phoneNumber !== message.from_phone" class="incoming_message">
-		<b>{{message.from_phone}}</b><br>
+	<ion-col size="9" *ngIf="message.direction == 'incoming'" class="incoming_message">
+		<span *ngIf="message.customer_id !== null"><b>{{message.customer_first_name}} {{message.customer_last_name}}</b><br></span>
+		<span *ngIf="message.customer_id === null"><b>{{message.from_phone}}</b><br></span>
 		<span>{{message.message}}</span>
 		<div class="time"><br>
 			{{message.date}}
 		</div>
 	</ion-col>
 
-	<ion-col size="9" offset="3" *ngIf="phoneNumber === message.from_phone" class="outgoing_message">
-		<b>{{message.from_phone}}</b><br>
+	<ion-col size="9" offset="3" *ngIf="message.direction == 'outgoing'" class="outgoing_message">
+		<span *ngIf="message.employee_id !== null"><b>{{message.employee_first_name}} {{message.employee_last_name}}</b><br></span>
+		<span *ngIf="message.employee_id === null"><b>{{message.from_phone}}</b><br></span>
 		<span>{{message.message}}</span>
 		<div class="time"><br>
 			{{message.date}}
@@ -30,10 +35,10 @@
 	<ion-toolbar color="dark">
 		<ion-row>
 			<ion-col size="10">
-				<textarea autosize class="new_message" placeholder="Type Reply" [(ngModel)] = "sendMessage"></textarea>
+				<textarea autosize class="new_message" placeholder="Type Reply" [(ngModel)] = "sendMessageText"></textarea>
 			</ion-col>
 			<ion-col size="2">
-				<ion-button class="send_button" expand="block" fill="clear" [disabled]="sendMessage ===''" (click)="sendMessage()"><ion-icon name="send-outline"></ion-icon>
+				<ion-button class="send_button" expand="block" fill="clear" [disabled]="sendMessageText ===''" (click)="sendMesssage()"><ion-icon name="send-outline"></ion-icon>
 				</ion-button>
 			</ion-col>
 		</ion-row>

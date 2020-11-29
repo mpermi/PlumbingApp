@@ -9,6 +9,12 @@ class Job {
   public $customer_id;
   public $customer_first_name;
   public $customer_last_name;
+  public $customer_phone;
+  public $customer_address1;
+  public $customer_address2;
+  public $customer_city;
+  public $customer_state;
+  public $customer_zipcode;
   public $issue;
   public $employee_id;
   public $employee_first_name;
@@ -30,16 +36,23 @@ class Job {
                 jobs.customer_id, 
                 customers.first_name as customer_first_name,
                 customers.last_name as customer_last_name,
+                customers.phone as customer_phone,
+                addresses.address1 as customer_address1,
+                addresses.address2 as customer_address2,
+                addresses.city as customer_city,
+                addresses.state as customer_state,
+                addresses.zipcode as customer_zipcode,
                 jobs.issue,
                 jobs.employee_id,
                 employees.first_name as employee_first_name,
                 employees.last_name as employee_last_name
 		          FROM " . $this->table_name . 
               " INNER JOIN customers ON customers.customer_id = jobs.customer_id
-                INNER JOIN employees ON employees.employee_id = jobs.employee_id" .
+                INNER JOIN employees ON employees.employee_id = jobs.employee_id
+                LEFT JOIN addresses ON addresses.address_id = customers.address_id" .
                   $sql .
 		          " ORDER BY
-		              jobs.date DESC";
+		              jobs.date";
     $result = $this->connection->prepare($query);
     $result->bindParam(':job_id', $job_id);
     $result->execute();
@@ -49,17 +62,23 @@ class Job {
 
   //create new job
   public function create() {
+    $date = filter_var($this->date, FILTER_SANITIZE_STRING);
+    $customer_id = filter_var($this->customer_id, FILTER_SANITIZE_STRING);
+    $issue = filter_var($this->issue, FILTER_SANITIZE_STRING);
+    $employee_id = filter_var($this->employee_id, FILTER_SANITIZE_STRING);
+    $created = filter_var($this->created, FILTER_SANITIZE_STRING);
+
     $query = "INSERT INTO
                 " . $this->table_name . "
                 (date, customer_id, issue, employee_id, created)
               VALUES (:date, :customer_id, :issue, :employee_id, :created)";
   
     $result = $this->connection->prepare($query);
-    $result->bindParam(':date', filter_var($this->date, FILTER_SANITIZE_STRING));
-    $result->bindParam(':customer_id', filter_var($this->customer_id, FILTER_SANITIZE_STRING));
-    $result->bindParam(':issue', filter_var($this->issue, FILTER_SANITIZE_STRING));
-    $result->bindParam(':employee_id', filter_var($this->employee_id, FILTER_SANITIZE_STRING));
-    $result->bindParam(':created', filter_var($this->created, FILTER_SANITIZE_STRING));
+    $result->bindParam(':date', $date);
+    $result->bindParam(':customer_id', $customer_id);
+    $result->bindParam(':issue', $issue);
+    $result->bindParam(':employee_id', $employee_id);
+    $result->bindParam(':created', $created);
     $result->execute();
 
     return $result;

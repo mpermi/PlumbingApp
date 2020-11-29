@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { CalendarPageRoutingModule } from './calendar-routing.module';
 import { NgCalendarModule  } from 'ionic2-calendar';
-import { AddJobPageModule } from '../modal/add-job/add-job.module';
+import { EditJobPageModule } from '../modal/edit-job/edit-job.module';
 
 import { CalendarPage } from './calendar.page';
 
@@ -17,7 +17,7 @@ import { CalendarPage } from './calendar.page';
     IonicModule,
     CalendarPageRoutingModule,
     NgCalendarModule,
-    AddJobPageModule
+    EditJobPageModule
   ],
   declarations: [CalendarPage]
 })

@@ -6,4 +6,8 @@
   .event-detail-container {
       display: none;
   }
+  ion-select{
+    --placeholder-color: #000;
+    --placeholder-opacity: 1;
+	}
 }

@@ -1,28 +1,26 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Messages</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="home"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 	<ion-grid>
-
 		<ion-row>
 			<ion-col size="12">
 			  <ion-list lines="full">
-			    <ion-item>
+			    <ion-item *ngFor="let message of incomingMessages" (click)="viewConversation(message.message_id, message.from_phone, message.customer_id)">
 			    	<ion-label>
-					    <h2>09/10/2020 10:33pm</h2>
-			      	<p>John Smith</p>
+					    <h2>{{message.date | date:'short'}}</h2>
+			      	<p *ngIf="message.customer_id === null && message.direction == 'incoming'">{{message.from_phone}}</p>
+			      	<p *ngIf="message.customer_id === null && message.direction == 'outgoing'">{{message.to_phone}}</p>
+			      	<p *ngIf="message.customer_id !== null">{{message.customer_first_name}} {{message.customer_last_name}}</p>
 			      </ion-label>
+			    	<ion-icon *ngIf="message.read == false" name="alert-outline" color="edit"></ion-icon>
 			    </ion-item>
-
-			    <ion-item>
-			    	<ion-label>
-					   	<h2>10/22/2020 01:20pm</h2>
-			      	<p>410-223-4455</p>
-			      </ion-label>
-			    </ion-item> 
 			  </ion-list>
 			</ion-col>
 	  </ion-row>

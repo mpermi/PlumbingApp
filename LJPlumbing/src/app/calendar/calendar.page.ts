@@ -1,8 +1,9 @@
 import { CalendarComponent } from 'ionic2-calendar';
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
-import { AddJobPage } from '../modal/add-job/add-job.page';
+import { EditJobPage } from '../modal/edit-job/edit-job.page';
+import { JobService } from '../services/job.service';
 
 @Component({
   selector: 'app-calendar',
@@ -12,6 +13,7 @@ import { AddJobPage } from '../modal/add-job/add-job.page';
 export class CalendarPage implements OnInit {
 	eventSource = [];
   viewTitle: string;
+  toast = null;
 
   calendar = {
     mode: 'month',
@@ -20,23 +22,25 @@ export class CalendarPage implements OnInit {
 
   selectedDate: Date;
 
-  @ViewChild(CalendarComponent) myCal: CalendarComponent;
+  @ViewChild(CalendarComponent) calendarComponent: CalendarComponent;
 
   constructor(
   	private alertCtrl: AlertController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private jobService: JobService,
+    private toastCtrl: ToastController
   ) { }
 
   ngOnInit() {
+    this.loadEvents();
   }
 
-    // Change current month/week/day
   next() {
-    this.myCal.slideNext();
+    this.calendarComponent.slideNext();
   }
  
   back() {
-    this.myCal.slidePrev();
+    this.calendarComponent.slidePrev();
   }
  
   onViewTitleChanged(title) {
@@ -45,49 +49,53 @@ export class CalendarPage implements OnInit {
 
   //select calendar event
   async viewEvent(event) {
-    let start = formatDate(event.startTime, 'medium', 'en-US');
+    let start = formatDate(event.startTime, 'EE, M/d/yy, h:mm a', 'en-US');
 
     const alert = await this.alertCtrl.create({
       header: event.customer,
       subHeader: event.issue,
-      message: 'Time: ' + start + '<br>',
-      buttons: ['OK', 'Cancel Job'],
+      message: '<b>Time:</b> ' + start + '<br> <b>Employee:</b> ' + event.employee + '<br> <b>Address:</b> ' + event.address + '<br> <b>Phone:</b> ' + event.phone,
+      buttons: [
+        {text: 'Ok'},
+        {
+          text: 'Edit Job',
+          handler: () => {
+            this.editJob(event);
+          }
+        },        
+        {
+          text: 'Cancel Job',
+          handler: () => {
+            this.deleteJob(event.job_id);
+          }
+        },
+      ],
     });
     alert.present();
   }
- 
-  removeEvent(event_id) {
-    this.eventSource = [];
-  }
 
-	async addJob() {
-	  const modal = await this.modalCtrl.create({
-	    component: AddJobPage,
-	    backdropDismiss: false
-	  });
-	 
-	  await modal.present();
-	 
-	  modal.onDidDismiss().then((result) => {
-	    if (result.data && result.data.event) {
-	      let event = {
-          title: result.data.event.customer,
-	      	customer: result.data.event.customer,
-          phone: result.data.event.phone,
-          address: result.data.event.address,
-          city: result.data.event.city,
-          state: result.data.event.state,
-          zip: result.data.event.zip,
-          startTime: new Date(result.data.event.startTime),
-          endTime: new Date(result.data.event.startTime),
-          issue: result.data.event.issue,
-	      	allDay: result.data.event.allDay
-	      }
-	      result.data.event;
+  loadEvents () {
+    this.jobService.getJobs().subscribe(result => {
+      this.eventSource = [];
 
-        let start = event.startTime;
+      result.data.forEach(event => {
+        let calendarEvent = {
+          title: event.customer_first_name + ' ' + event.customer_last_name,
+          customer: event.customer_first_name + ' ' + event.customer_last_name,
+          customer_id: event.customer_id,
+          employee: event.employee_first_name + ' ' + event.employee_last_name,
+          employee_id: event.employee_id,
+          phone: event.customer_phone,
+          address: event.customer_address1 + ' ' + event.customer_address2 + ' <br>' + event.customer_city + ' ' + event.customer_state + ' ' + event.customer_zipcode,
+          startTime: new Date(event.date),
+          endTime: new Date(event.date),
+          issue: event.issue,
+          job_id: event.job_id,
+          allDay: false
+        }
 
-        event.startTime = new Date(
+        let start = calendarEvent.startTime;
+        calendarEvent.startTime = new Date(
           Date.UTC(
             start.getUTCFullYear(),
             start.getUTCMonth(),
@@ -95,9 +103,9 @@ export class CalendarPage implements OnInit {
             start.getUTCHours(),
             start.getUTCMinutes()
           )
-        );      	
+        );        
 
-        event.endTime = new Date(
+        calendarEvent.endTime = new Date(
           Date.UTC(
             start.getUTCFullYear(),
             start.getUTCMonth(),
@@ -107,9 +115,77 @@ export class CalendarPage implements OnInit {
           )
         );
 
-	      this.eventSource.push(event);
-	      this.myCal.loadEvents();
-	    }
+        this.eventSource.push(calendarEvent);
+        
+      });
+      this.calendarComponent.loadEvents();
+    });
+  }
+  //add a job to  the calendar
+	async addJob() {
+	  const modal = await this.modalCtrl.create({
+	    component: EditJobPage,
+      componentProps: {
+        jobForm: {
+          customer_id: '',
+          issue: '',
+          date: '',
+          employee_id: ''}
+      },
+	    backdropDismiss: false
 	  });
-	}    
+	 
+	  await modal.present();
+	 
+	  modal.onDidDismiss().then((result) => {
+      this.loadEvents();
+	  });
+	}
+
+  async deleteJob(job_id) {
+    this.jobService.deleteJob(job_id).subscribe(result => {
+      if (result.status =='success') {
+        this.loadEvents();
+      } else {
+        this.showAlert('There was an error deleting this job', 'danger');
+      }
+    });
+  }
+
+  async editJob(event) {
+    const modal = await this.modalCtrl.create({
+      component: EditJobPage,
+      componentProps: {
+        jobForm: {
+          customer_id: event.customer_id,
+          customer: event.customer,
+          issue: event.issue,
+          date: event.startTime.toISOString(),
+          employee_id: event.employee_id,
+          employee: event.employee,
+          job_id: event.job_id}
+      },
+      backdropDismiss: false
+    });
+   
+    await modal.present();
+   
+    modal.onDidDismiss().then((result) => {
+      this.loadEvents();
+    });
+  }
+
+  async showAlert(message, color) {
+    if (this.toast) {
+      this.toast.dismiss();
+    }
+
+    this.toast = await this.toastCtrl.create({
+      message: message,
+      duration:3000,
+      position: 'bottom',
+      color: color
+    });
+    this.toast.present();
+  }   
 }

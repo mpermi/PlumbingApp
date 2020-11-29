@@ -7,7 +7,7 @@
   	</ion-buttons>
     <ion-title>Edit Employee</ion-title>
     <ion-buttons slot="end">
-	    <ion-button (click)="save()">
+	    <ion-button (click)="saveEmployee()">
 	      <ion-icon name="checkmark" slot="icon-only"></ion-icon>
 	    </ion-button>
   	</ion-buttons>
@@ -21,32 +21,36 @@
         <ion-list>
           <ion-item lines="full">
             <ion-label position="stacked">First Name</ion-label>
-            <ion-input [(ngModel)]="employee.first_name" name="first_name" type="text"></ion-input>
+            <ion-input [(ngModel)]="employeeForm.first_name" name="first_name" type="text"></ion-input>
           </ion-item>
 
           <ion-item lines="full">
             <ion-label position="stacked">Last Name</ion-label>
-            <ion-input [(ngModel)]="employee.last_name" name="last_name" type="text"></ion-input>
+            <ion-input [(ngModel)]="employeeForm.last_name" name="last_name" type="text"></ion-input>
           </ion-item>
           
           <ion-item lines="full">
             <ion-label position="stacked">Username</ion-label>
-            <ion-input [(ngModel)]="employee.username" name="address" type="text"></ion-input>
+            <ion-input [(ngModel)]="employeeForm.username" name="address" type="text"></ion-input>
           </ion-item>          
 
           <ion-item lines="full">
             <ion-label position="stacked">Password</ion-label>
-            <ion-input [(ngModel)]="employee.password" name="city" type="password"></ion-input>
+            <ion-input [(ngModel)]="employeeForm.password" name="city" type="password"></ion-input>
           </ion-item>
 
           <ion-item lines="full">
             <ion-label position="stacked">Phone</ion-label>
-            <ion-input [(ngModel)]="employee.phone" name="phone" type="tel"></ion-input>
+            <ion-input [(ngModel)]="employeeForm.phone" name="phone" type="tel"></ion-input>
           </ion-item>
 
           <ion-item lines="full">
             <ion-label position="stacked">Title</ion-label>
-            <ion-select [(ngModel)]="employee.title" name="title"></ion-select>
+            <ion-select [(ngModel)]="employeeForm.title_id" [value]="employeeForm.title_id" name="title">
+              <ion-select-option *ngFor="let title of titles" [value]="title.title_id">
+                {{title.name}}
+              </ion-select-option>
+            </ion-select>
           </ion-item>          
         </ion-list>
       </ion-col>

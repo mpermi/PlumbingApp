@@ -4,6 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
 //database config file and class
+include_once 'config/core.php';
 include_once 'config/database.php';
 include_once 'classes/title.php';
   
@@ -12,11 +13,18 @@ $database = new Database();
 $db = $database->connect();
   
 $title = new Title($db);
-$title_id = isset($_GET['title_id']) ? $_GET['title_id'] : '';
-$request = isset($_GET['request']) ? $_GET['request'] : '';
-$output=array();
 
-$decoded_data = json_decode(file_get_contents('php://input')); 
+if ($_SERVER['REQUEST_METHOD'] =='GET') {
+	$data = $_GET;
+} else if ($_SERVER['REQUEST_METHOD'] =='POST') {
+	$data = $_POST;
+} else {
+	$data=array();
+}
+
+$title_id = isset($data['title_id']) ? $data['title_id'] : '';
+$request = isset($data['request']) ? $data['request'] : '';
+$output=array();
 
 switch ($request) {
 	case "find":
@@ -47,14 +55,14 @@ switch ($request) {
 		}
 		break;
 	case "add":
-	  $title->name = $decoded_data->name ? $decoded_data->name : '';
+	  $title->name = $data['name'] ? $data['name'] : '';
 	  $title->created = date('Y-m-d H:i:s');
 
 	  if ($title->create()) {
 			$output["status"] =  "success";
 		  $output["data"] =  "Title added";
 	  } else {
-	  	$output["error"] =  "error";
+	  	$output["status"] =  "error";
 			$output["data"] =  "There was an error adding title";
 	  }
 

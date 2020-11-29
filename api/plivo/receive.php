@@ -8,30 +8,45 @@
 
   //database config file and class
   include_once '../config/database.php';
+  include_once '../config/core.php';
   include_once '../classes/message.php';
+  include_once '../classes/customer.php';
 
   $database = new Database();
   $db = $database->connect();
 
   $uuid = isset($_POST['MessageUUID']) ? $_POST['MessageUUID'] : '';
+  $from_phone = isset($_POST['From']) ? $_POST['From'] : '';
 
   // query messages
   $message = new Message($db);
-  $query = $message->get_all($uuid);
+  $query = $message->get_message_by_uuid($uuid);
   $total = $query->rowCount();
 
-  //TODO search for customer record when that class is done
-  //$message->customer_id = ??;
+  //try to find a customer record that matches the phone #
+  $customer_id = 0;
+  $customer = new Customer($db);
+  $customers = $customer->get_customer_by_phone($from_phone);
+  $total_customers = $customers->rowCount();
+  
+  if ($total_customers && $total_customers == 1) {
+    $row = $customers->fetch(PDO::FETCH_ASSOC);
+    extract($row);
+  }
+
+  $message->customer_id = $customer_id;
+  $message->employee_id = 0;
   $message->date = date('Y-m-d H:i:s');
-  $message->to_phone = '14102614888';
-  $message->from_phone = isset($_POST['From']) ? $_POST['From'] : '';
+  $message->to_phone = isset($_POST['To']) ? $_POST['To'] : $plivo_phone;
+  $message->from_phone = $from_phone;
   $message->direction = 'incoming';
   $message->message = isset($_POST['Text']) ? $_POST['Text'] : '';
   $message->uuid = isset($_POST['MessageUUID']) ? $_POST['MessageUUID'] : '';
+  $message->read = 0;
   $message->created = date('Y-m-d H:i:s');
 
   if ($total && $uuid) {
-    $message->update();
+    $message->update('', $uuid);
   } else {
     $message->create();
   }

@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Customers</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="home"></ion-back-button>
+    </ion-buttons>    
     <ion-buttons slot="end">
       <ion-button (click)="addCustomer()">
         <ion-icon name="add" slot="icon-only"></ion-icon>
@@ -15,24 +18,24 @@
 		<ion-row>
 			<ion-col size="12">
 			  <ion-list lines="full">
-			    <ion-item>
+			    <ion-item *ngFor="let customer of customers">
 			      <ion-col size='8'>
 			      	<ion-row>
-		            <span class="name"><h4>John Smith</h4></span>
+		            <span class="name"><h4>{{customer.first_name}} {{customer.last_name}}</h4></span>
 	          	</ion-row>
 				      <ion-row>
 		            <ion-label class="label" color="dark" >Address: </ion-label>
-		            <ion-label class="value" color="dark" >123 Sparks Rd, Baltimore MD 21122</ion-label>
+		            <ion-label class="value" color="dark" >{{customer.address1}}. {{customer.city}}, {{customer.state}} {{customer.zipcode}}</ion-label>
 	          	</ion-row>
 	          	<ion-row>
 		            <ion-label class="label" color="dark" >Phone: </ion-label>
-		            <ion-label class="value" color="dark" >410-123-4567</ion-label>
+		            <ion-label class="value" color="dark" >{{customer.phone}} </ion-label>
 	          	</ion-row>
 			      </ion-col>
 			      <ion-col class="actions" size='4'>
-			        <ion-icon name="search" color="view"></ion-icon>
-			        <ion-icon name="create" color="edit"></ion-icon>
-			        <ion-icon name="trash" color="danger"></ion-icon>
+			        <ion-icon name="search" color="view" (click)="viewCustomer(customer)"></ion-icon>
+			        <ion-icon name="create" color="edit" (click)="editCustomer(customer)"></ion-icon>
+			        <ion-icon name="trash" color="danger" (click)="deleteCustomerAlert(customer)"></ion-icon>
 			      </ion-col>
 			    </ion-item> 
 			  </ion-list>

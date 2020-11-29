@@ -5,12 +5,7 @@
 	      <ion-icon name="close" slot="icon-only"></ion-icon>
 	    </ion-button>
   	</ion-buttons>
-    <ion-title>Edit Customer</ion-title>
-    <ion-buttons slot="end">
-	    <ion-button (click)="saveCustomer()">
-	      <ion-icon name="checkmark" slot="icon-only"></ion-icon>
-	    </ion-button>
-  	</ion-buttons>
+    <ion-title>View Customer</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -21,43 +16,42 @@
         <ion-list>
           <ion-item lines="full">
             <ion-label position="stacked">First Name</ion-label>
-            <ion-input [(ngModel)]="customerForm.first_name" name="first_name" type="text"></ion-input>
+            <ion-input [(ngModel)]="customerForm.first_name" name="first_name" type="text" readonly></ion-input>
           </ion-item>
 
           <ion-item lines="full">
             <ion-label position="stacked">Last Name</ion-label>
-            <ion-input [(ngModel)]="customerForm.last_name" name="last_name" type="text"></ion-input>
+            <ion-input [(ngModel)]="customerForm.last_name" name="last_name" type="text" readonly></ion-input>
           </ion-item>
           
           <ion-item lines="full">
             <ion-label position="stacked">Phone</ion-label>
-            <ion-input [(ngModel)]="customerForm.phone" name="phone" type="tel"></ion-input>
-          </ion-item> 
+            <ion-input [(ngModel)]="customerForm.phone" name="phone" type="tel" readonly></ion-input>
+          </ion-item>
 
           <ion-item lines="full">
             <ion-label position="stacked">Address1</ion-label>
-            <ion-input [(ngModel)]="customerForm.address1" name="address1" type="text"></ion-input>
-            <ion-input [(ngModel)]="customerForm.address_id" name="address_id" type="hidden"></ion-input>
+            <ion-input [(ngModel)]="customerForm.address1" name="address1" type="text" readonly></ion-input>
           </ion-item>          
 
           <ion-item lines="full">
             <ion-label position="stacked">Address2</ion-label>
-            <ion-input [(ngModel)]="customerForm.address2" name="address2" type="text"></ion-input>
-          </ion-item>    
+            <ion-input [(ngModel)]="customerForm.address2" name="address2" type="text" readonly></ion-input>
+          </ion-item>  
 
           <ion-item lines="full">
             <ion-label position="stacked">City</ion-label>
-            <ion-input [(ngModel)]="customerForm.city" name="city" type="text"></ion-input>
+            <ion-input [(ngModel)]="customerForm.city" name="city" type="text" readonly></ion-input>
           </ion-item>
 
           <ion-item lines="full">
             <ion-label position="stacked">State</ion-label>
-            <ion-input [(ngModel)]="customerForm.state" name="state" type="text"></ion-input>
+            <ion-input [(ngModel)]="customerForm.state" name="state" type="text" readonly></ion-input>
           </ion-item>
 
           <ion-item lines="full">
             <ion-label position="stacked">Zip</ion-label>
-            <ion-input [(ngModel)]="customerForm.zipcode" name="zip" type="text"></ion-input>
+            <ion-input [(ngModel)]="customerForm.zipcode" name="zip" type="text" readonly></ion-input>
           </ion-item>          
         </ion-list>
       </ion-col>

@@ -10,7 +10,8 @@
     <ion-row>
       <ion-col size="6">
         <img src="assets/images/inbox.png" routerLink="/messages" routerDirection="root" />
-        <p class="icon_title">Messages</p>
+        <p class="icon_title" *ngIf="unreadMessageTotal == 0">Messages</p>
+        <p class="icon_title_new_message" *ngIf="unreadMessageTotal > 0"> {{unreadMessageTotal}} New Messages</p>
       </ion-col>
       <ion-col size="6">
         <img src="assets/images/calendar.png" routerLink="/calendar" routerDirection="root"/>

@@ -28,10 +28,6 @@ const routes: Routes = [
     loadChildren: () => import('./calendar/calendar.module').then( m => m.CalendarPageModule)
   },
   {
-    path: 'add-job',
-    loadChildren: () => import('./modal/add-job/add-job.module').then( m => m.AddJobPageModule)
-  },
-  {
     path: 'messages',
     loadChildren: () => import('./messages/messages.module').then( m => m.MessagesPageModule)
   },
@@ -46,6 +42,18 @@ const routes: Routes = [
   {
     path: 'edit-customer',
     loadChildren: () => import('./modal/edit-customer/edit-customer.module').then( m => m.EditCustomerPageModule)
+  },
+  {
+    path: 'view-employee',
+    loadChildren: () => import('./modal/view-employee/view-employee.module').then( m => m.ViewEmployeePageModule)
+  },
+  {
+    path: 'view-customer',
+    loadChildren: () => import('./modal/view-customer/view-customer.module').then( m => m.ViewCustomerPageModule)
+  },
+  {
+    path: 'edit-job',
+    loadChildren: () => import('./modal/edit-job/edit-job.module').then( m => m.EditJobPageModule)
   },
 ];
 

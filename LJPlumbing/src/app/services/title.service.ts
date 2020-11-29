@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TitleService {
-	apiURL = 'https://047a9a44549b.ngrok.io/api/title.php/';
+	apiURL = 'https://354c1d3d5fd8.ngrok.io/api/title.php/';
 
   constructor(private http: HttpClient) { }
 

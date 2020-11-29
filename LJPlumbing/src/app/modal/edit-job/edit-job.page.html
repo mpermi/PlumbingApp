@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+  	<ion-buttons slot="start">
+	    <ion-button (click)="close()">
+	      <ion-icon name="close" slot="icon-only"></ion-icon>
+	    </ion-button>
+  	</ion-buttons>
+    <ion-title>Add Job</ion-title>
+    <ion-buttons slot="end">
+	    <ion-button (click)="saveJob()" [disabled]="!eventForm.valid">
+	      <ion-icon name="checkmark" slot="icon-only"></ion-icon>
+	    </ion-button>
+  	</ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <form [formGroup]="eventForm" name="eventForm">
+          <ion-item lines="full">
+            <ion-label position="stacked">Customer</ion-label>
+            <ion-select [(ngModel)]="jobForm.customer_id" name="customer_id" formControlName="customer_id">
+              <ion-select-option *ngFor="let customer of customers" [value]="customer.customer_id">
+                {{customer.first_name}} {{customer.last_name}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item lines="full">
+            <ion-label position="stacked">Time</ion-label>
+            <ion-datetime displayFormat="MMM DD, YYYY HH:mm" [(ngModel)]="jobForm.date" name="date" formControlName="date"></ion-datetime>
+          </ion-item>
+          <ion-item lines="full">
+            <ion-label position="stacked">Issue</ion-label>
+            <ion-input type="text" [(ngModel)]="jobForm.issue" name="issue" formControlName="issue"></ion-input>
+          </ion-item> 
+          <ion-item lines="full">
+            <ion-label position="stacked">Employee</ion-label>
+            <ion-select [(ngModel)]="jobForm.employee_id" name="employee_id" formControlName="employee_id">
+              <ion-select-option *ngFor="let employee of employees" [value]="employee.employee_id">
+                {{employee.first_name}} {{employee.last_name}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+      </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

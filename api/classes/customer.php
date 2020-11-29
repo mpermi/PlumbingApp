@@ -68,6 +68,7 @@ class Customer {
                 first_name, last_name DESC";
     $result = $this->connection->prepare($query);
     $result->bindParam(':phone', $phone);
+    file_put_contents('/tmp/pppppp.php', $query);
     $result->execute();
   
     return $result;
@@ -75,6 +76,11 @@ class Customer {
 
   //update existing customer
   public function update($customer_id) {
+    $first_name = filter_var($this->first_name, FILTER_SANITIZE_STRING);
+    $last_name = filter_var($this->last_name, FILTER_SANITIZE_STRING);
+    $phone = filter_var($this->phone, FILTER_SANITIZE_STRING);
+    $address_id = filter_var($this->address_id, FILTER_SANITIZE_STRING);
+
     $query = "UPDATE
                 " . $this->table_name . "
               SET
@@ -87,10 +93,10 @@ class Customer {
   
     $result = $this->connection->prepare($query);
     $result->bindParam(':customer_id', $customer_id);
-    $result->bindParam(':first_name', filter_var($this->first_name, FILTER_SANITIZE_STRING));
-    $result->bindParam(':last_name', filter_var($this->last_name, FILTER_SANITIZE_STRING));
-    $result->bindParam(':phone', filter_var($this->phone, FILTER_SANITIZE_STRING));
-    $result->bindParam(':address_id', filter_var($this->address_id, FILTER_SANITIZE_STRING));
+    $result->bindParam(':first_name', $first_name);
+    $result->bindParam(':last_name', $last_name);
+    $result->bindParam(':phone', $phone);
+    $result->bindParam(':address_id', $address_id);
     $result->execute();
 
     return $result;
@@ -98,17 +104,23 @@ class Customer {
 
   //create new customer
   public function create() {
+    $first_name = filter_var($this->first_name, FILTER_SANITIZE_STRING);
+    $last_name = filter_var($this->last_name, FILTER_SANITIZE_STRING);
+    $phone = filter_var($this->phone, FILTER_SANITIZE_STRING);
+    $address_id = filter_var($this->address_id, FILTER_SANITIZE_STRING);
+    $created = filter_var($this->created, FILTER_SANITIZE_STRING);
+
     $query = "INSERT INTO
                 " . $this->table_name . "
                 (first_name, last_name, phone, address_id, created)
               VALUES (:first_name, :last_name, :phone, :address_id, :created)";
   
     $result = $this->connection->prepare($query);
-    $result->bindParam(':first_name', filter_var($this->first_name, FILTER_SANITIZE_STRING));
-    $result->bindParam(':last_name', filter_var($this->last_name, FILTER_SANITIZE_STRING));
-    $result->bindParam(':phone', filter_var($this->phone, FILTER_SANITIZE_STRING));
-    $result->bindParam(':address_id', filter_var($this->address_id, FILTER_SANITIZE_STRING));
-    $result->bindParam(':created', filter_var($this->created, FILTER_SANITIZE_STRING));
+    $result->bindParam(':first_name', $first_name);
+    $result->bindParam(':last_name', $last_name);
+    $result->bindParam(':phone', $phone);
+    $result->bindParam(':address_id', $address_id);
+    $result->bindParam(':created', $created);
     $result->execute();
 
     return $result;

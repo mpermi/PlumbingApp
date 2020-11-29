@@ -32,14 +32,17 @@ class Title {
 
   //create new title
   public function create() {
+    $name = filter_var($this->name, FILTER_SANITIZE_STRING);
+    $created = filter_var($this->created, FILTER_SANITIZE_STRING);
+
     $query = "INSERT INTO
                 " . $this->table_name . "
                 (name, created)
               VALUES (:name, :created)";
   
     $result = $this->connection->prepare($query);
-    $result->bindParam(':name', filter_var($this->name, FILTER_SANITIZE_STRING));
-    $result->bindParam(':created', filter_var($this->created, FILTER_SANITIZE_STRING));
+    $result->bindParam(':name', $name);
+    $result->bindParam(':created', $created);
     $result->execute();
 
     return $result;

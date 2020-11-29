@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from '../services/message.service';
+import { ToastController} from '@ionic/angular';
 
 @Component({
   selector: 'app-view-message',
@@ -6,42 +9,64 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./view-message.page.scss'],
 })
 export class ViewMessagePage implements OnInit {
-	messages = [
-		{	
-			customer_id: 0,
-			employee_id: 0,
-			to_phone: '410-232-2222',
-			from_phone: '410-555-6666',
-			message: 'Hello',
-			date: '10/21/2020',
-			direction: 'incoming'
-		},
-		{
-			customer_id: 0,
-			employee_id: 0,
-			to_phone: '410-232-2222',
-			from_phone: '410-555-6666',
-			message: 'This is a test message',
-			date: '10/22/2020',
-			direction: 'incoming'
-		},
-		{
-			customer_id: 0,
-			employee_id: 1,
-			to_phone: '410-555-6666',
-			from_phone: '410-232-2222',
-			message: 'Hello. Message received',
-			date: '10/22/2020',
-			direction: 'outgoing'
-		}
-	];
+	from_phone: any;
+	customer_id: any;
+	messages = null;
+	phoneNumber = '14102614888';
+	sendMessageText = '';
+	sendMesssageForm;
+	toast = null;
 
-	phoneNumber = '410-232-2222';  //change this to the phone number assigned to our company
-	sendMessage = '';
-	
-  constructor() { }
+  constructor(
+  	private activatedRoute: ActivatedRoute, 
+  	private router: Router,
+  	private messageService: MessageService,
+  	private toastCtrl: ToastController) { 
 
-  ngOnInit() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params && params.from_phone) {
+        this.from_phone = JSON.parse(params.from_phone);
+        this.customer_id = JSON.parse(params.customer_id);
+      }
+    });
   }
 
+  ngOnInit() {
+  	this.messageService.getConversation(this.from_phone).subscribe(result => {
+      this.messages = result.data;
+    });
+  }
+
+  public loadConversation() {
+    console.log('dfsdfsdf');
+  	this.messageService.getConversation(this.from_phone).subscribe(result => {
+      this.messages = result.data;
+    });
+  }
+
+  sendMesssage() {
+  	//TODO replace with a logged in employee id
+    this.messageService.sendMessage('2', this.from_phone, this.customer_id, this.sendMessageText).subscribe(result => {
+      if (result.status =='success') {
+      	this.sendMessageText = '';
+        this.loadConversation();
+      } else {
+        this.showAlert('There was an error sending this message', 'danger');
+      }
+    });
+  }
+
+  async showAlert(message, color) {
+    if (this.toast) {
+      this.toast.dismiss();
+    }
+
+    this.toast = await this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: 'bottom',
+      color: color
+    });
+    this.toast.present();
+  }  
 }

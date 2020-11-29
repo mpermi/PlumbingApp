@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Calendar</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="home"></ion-back-button>
+    </ion-buttons>    
     <ion-buttons slot="end">
       <ion-button (click)="addJob()">
         <ion-icon name="add" slot="icon-only"></ion-icon>
