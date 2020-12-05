@@ -33,14 +33,21 @@ export class ViewMessagePage implements OnInit {
 
   ngOnInit() {
   	this.messageService.getConversation(this.from_phone).subscribe(result => {
-      this.messages = result.data;
+      if (result.status == 'success') {
+        this.messages = result.data;
+      } else {
+        this.showAlert(result.data, 'danger');
+      }
     });
   }
 
   public loadConversation() {
-    console.log('dfsdfsdf');
   	this.messageService.getConversation(this.from_phone).subscribe(result => {
-      this.messages = result.data;
+      if (result.status == 'success') {
+        this.messages = result.data;
+      } else {
+        this.showAlert(result.data, 'danger');
+      } 
     });
   }
 

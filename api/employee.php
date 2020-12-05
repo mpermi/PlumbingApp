@@ -1,7 +1,6 @@
 <?php
 // required headers
 header("Access-Control-Allow-Origin: *");
-//header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");  
@@ -32,10 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] =='GET') {
 }
 $employee_id = isset($data['employee_id']) ? $data['employee_id'] : '';
 $username = isset($data['username']) ? $data['username'] : '';
+$employee_password = isset($data['password']) ? $data['password'] : '';
+$token = isset($data['token']) ? $data['token'] : '';
 $request = isset($data['request']) ? $data['request'] : '';
 $output=array();
 
-// $decoded_data = json_decode(file_get_contents('php://input')); 
+//validate login token
+if ($request != 'login') {
+	try {
+		$decoded_token = JWT::decode($token, $key, array('HS256'));
+	} catch (Exception $e) {
+	  echo json_encode(array("status" => "error", "data" => "Authentication failed. " . $e->getMessage()));
+	  return;
+	}
+}
 
 switch ($request) {
 	case "find":
@@ -61,13 +70,11 @@ switch ($request) {
 		    $output["data"][] = $result;
 		  }
 
-		  //http_response_code(200);
 		  $output["status"] =  "success";
 		  echo json_encode($output);
 		} else {
-		  //http_response_code(404);
 		  echo json_encode(
-		      array("status"=>"error", "message" => "No employees found.")
+		    array("status"=>"error", "message" => "No employees found.")
 		  );
 		}
 		break;
@@ -90,6 +97,36 @@ switch ($request) {
 
 	  echo json_encode($output);
 		break;
+	case "logged_in_employee":
+		// query employees
+		$employees = $employee->get_all($decoded_token->employee_id);
+		$total = $employees->rowCount();
+		  
+		if ($total) {
+		  while ($row = $employees->fetch(PDO::FETCH_ASSOC)){
+		    extract($row);
+
+		    $result=array(
+		        "employee_id" => $employee_id,
+		        "first_name" => $first_name,
+		        "last_name" => $last_name,
+		        "username" => $username,
+		        "title_id" => $title_id,
+		        "title" => $title,
+		        "phone" => $phone
+		    );
+
+		    $output["data"][] = $result;
+		  }
+
+		  $output["status"] =  "success";
+		  echo json_encode($output);
+		} else {
+		  echo json_encode(
+		    array("status"=>"error", "message" => "No employees found.")
+		  );
+		}
+		break;		
 	case "update":
 		$current_employee = $employee->get_all($employee_id);
 		$total = $current_employee->rowCount();
@@ -121,6 +158,7 @@ switch ($request) {
 			echo json_encode(
 		    array("status"=>"error", "message" => "You must provide an employee id to delete.")
 		  );
+		  return;
 		}
 	  if ($employee->delete($employee_id)) {
 	  	$output["status"] =  "success";
@@ -137,11 +175,33 @@ switch ($request) {
 		$total = $employees->rowCount();
 		
 		if ($total) {
-		  while ($row = $employees->fetch(PDO::FETCH_ASSOC)){
-		    extract($row);
+			$row = $employees->fetch(PDO::FETCH_ASSOC);
+		  extract($row);
+
+		  if (password_verify($employee_password, $password)) {
+				$token = array(
+				   "employee_id" => $employee_id,
+				   "expiration_date" => $expiration_time
+				);
+				$jwt_token = JWT::encode($token, $key);
+
+				if ($jwt_token) {
+		    	$output["data"] = $jwt_token;
+					$output["status"] =  "success";
+				} else {
+					$output["status"] =  "error";
+					$output["data"] =  "Could not encode token";
+				}
+		  } else {
+		  	$output["status"] =  "error";
+				$output["data"] =  "Login error. Incorrect password";
 		  }
-		}    
-	  echo json_encode($output);
+		} else {
+			$output["status"] =  "error";
+			$output["data"] =  "Login error. No employee with this username";
+		}
+
+		echo json_encode($output);
 		break;		
 }
 

@@ -76,49 +76,53 @@ export class CalendarPage implements OnInit {
 
   loadEvents () {
     this.jobService.getJobs().subscribe(result => {
-      this.eventSource = [];
+      if (result.status == 'success') {
+        this.eventSource = [];
 
-      result.data.forEach(event => {
-        let calendarEvent = {
-          title: event.customer_first_name + ' ' + event.customer_last_name,
-          customer: event.customer_first_name + ' ' + event.customer_last_name,
-          customer_id: event.customer_id,
-          employee: event.employee_first_name + ' ' + event.employee_last_name,
-          employee_id: event.employee_id,
-          phone: event.customer_phone,
-          address: event.customer_address1 + ' ' + event.customer_address2 + ' <br>' + event.customer_city + ' ' + event.customer_state + ' ' + event.customer_zipcode,
-          startTime: new Date(event.date),
-          endTime: new Date(event.date),
-          issue: event.issue,
-          job_id: event.job_id,
-          allDay: false
-        }
+        result.data.forEach(event => {
+          let calendarEvent = {
+            title: event.customer_first_name + ' ' + event.customer_last_name,
+            customer: event.customer_first_name + ' ' + event.customer_last_name,
+            customer_id: event.customer_id,
+            employee: event.employee_first_name + ' ' + event.employee_last_name,
+            employee_id: event.employee_id,
+            phone: event.customer_phone,
+            address: event.customer_address1 + ' ' + event.customer_address2 + ' <br>' + event.customer_city + ' ' + event.customer_state + ' ' + event.customer_zipcode,
+            startTime: new Date(event.date),
+            endTime: new Date(event.date),
+            issue: event.issue,
+            job_id: event.job_id,
+            allDay: false
+          }
 
-        let start = calendarEvent.startTime;
-        calendarEvent.startTime = new Date(
-          Date.UTC(
-            start.getUTCFullYear(),
-            start.getUTCMonth(),
-            start.getUTCDate(),
-            start.getUTCHours(),
-            start.getUTCMinutes()
-          )
-        );        
+          let start = calendarEvent.startTime;
+          calendarEvent.startTime = new Date(
+            Date.UTC(
+              start.getUTCFullYear(),
+              start.getUTCMonth(),
+              start.getUTCDate(),
+              start.getUTCHours(),
+              start.getUTCMinutes()
+            )
+          );        
 
-        calendarEvent.endTime = new Date(
-          Date.UTC(
-            start.getUTCFullYear(),
-            start.getUTCMonth(),
-            start.getUTCDate(),
-            start.getUTCHours() + 1,
-            start.getUTCMinutes()
-          )
-        );
+          calendarEvent.endTime = new Date(
+            Date.UTC(
+              start.getUTCFullYear(),
+              start.getUTCMonth(),
+              start.getUTCDate(),
+              start.getUTCHours() + 1,
+              start.getUTCMinutes()
+            )
+          );
 
-        this.eventSource.push(calendarEvent);
-        
-      });
-      this.calendarComponent.loadEvents();
+          this.eventSource.push(calendarEvent);
+          
+        });
+        this.calendarComponent.loadEvents();
+      } else {
+        this.showAlert(result.data, 'danger');
+      }
     });
   }
   //add a job to  the calendar

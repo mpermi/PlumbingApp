@@ -1,7 +1,6 @@
 <?php
 // required headers
 header("Access-Control-Allow-Origin: *");
-//header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");  
@@ -10,6 +9,12 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once 'config/core.php';
 include_once 'config/database.php';
 include_once 'classes/job.php';
+require_once 'jwt/src/BeforeValidException.php';
+require_once 'jwt/src/ExpiredException.php';
+require_once 'jwt/src/SignatureInvalidException.php';
+require_once 'jwt/src/JWT.php';
+
+use \Firebase\JWT\JWT;
   
 // instantiate database and job object
 $database = new Database();
@@ -25,8 +30,17 @@ if ($_SERVER['REQUEST_METHOD'] =='GET') {
 }
 
 $job_id = isset($data['job_id']) ? $data['job_id'] : '';
+$token = isset($data['token']) ? $data['token'] : '';
 $request = isset($data['request']) ? $data['request'] : '';
 $output=array();
+
+//validate login token
+try {
+	$decoded_token = JWT::decode($token, $key, array('HS256'));
+} catch (Exception $e) {
+  echo json_encode(array("status" => "error", "data" => "Authentication failed. " . $e->getMessage()));
+  return;
+}
 
 switch ($request) {
 	case "find":
@@ -85,6 +99,13 @@ switch ($request) {
 	  echo json_encode($output);
 		break;
 	case "delete":
+		if (!$job_id) {
+			echo json_encode(
+		    array("status"=>"error", "message" => "You must provide a job id to delete.")
+		  );
+		  return;
+		}
+
 	  if ($job->delete($job_id)) {
 	  	$output["status"] =  "success";
 			$output["data"] =  "Job deleted";

@@ -68,7 +68,6 @@ class Customer {
                 first_name, last_name DESC";
     $result = $this->connection->prepare($query);
     $result->bindParam(':phone', $phone);
-    file_put_contents('/tmp/pppppp.php', $query);
     $result->execute();
   
     return $result;

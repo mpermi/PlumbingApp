@@ -1,5 +1,6 @@
 .welcome {
   border-bottom: 1px solid #92949c;
+  align-items: center;
 }
 
 .icon_title {
@@ -21,4 +22,12 @@
   margin: -34px 0px 0px 0px;
   text-align: center;
   font-weight: bold;
+}
+
+#logout {
+  text-align: right;
+}
+
+ion-icon {
+  font-size: 24px;
 }

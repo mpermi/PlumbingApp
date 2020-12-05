@@ -1,7 +1,6 @@
 <?php
 // required headers
 header("Access-Control-Allow-Origin: *");
-//header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");  
@@ -11,6 +10,12 @@ include_once 'config/core.php';
 include_once 'config/database.php';
 include_once 'classes/customer.php';
 include_once 'classes/address.php';
+require_once 'jwt/src/BeforeValidException.php';
+require_once 'jwt/src/ExpiredException.php';
+require_once 'jwt/src/SignatureInvalidException.php';
+require_once 'jwt/src/JWT.php';
+
+use \Firebase\JWT\JWT;
 
 // instantiate database and customer object
 $database = new Database();
@@ -29,10 +34,17 @@ if ($_SERVER['REQUEST_METHOD'] =='GET') {
 
 $customer_id = isset($data['customer_id']) ? $data['customer_id'] : '';
 $phone = isset($data['phone']) ? $data['phone'] : '';
+$token = isset($data['token']) ? $data['token'] : '';
 $request = isset($data['request']) ? $data['request'] : '';
 $output=array();
 
-// $decoded_data = json_decode(file_get_contents('php://input')); 
+//validate login token
+try {
+	$decoded_token = JWT::decode($token, $key, array('HS256'));
+} catch (Exception $e) {
+  echo json_encode(array("status" => "error", "data" => "Authentication failed. " . $e->getMessage()));
+  return;
+}
 
 switch ($request) {
 	case "find":
@@ -60,11 +72,9 @@ switch ($request) {
 		    $output["data"][] = $result;
 		  }
 
-		  //http_response_code(200);
 		  $output["status"] =  "success";
 		  echo json_encode($output);
 		} else {
-		  //http_response_code(404);
 		  echo json_encode(
 		      array("status"=>"error", "message" => "No customers found.")
 		  );
@@ -95,11 +105,9 @@ switch ($request) {
 		    $output["data"][] = $result;
 		  }
 
-		  //http_response_code(200);
 		  $output["status"] =  "success";
 		  echo json_encode($output);
 		} else {
-		  //http_response_code(404);
 		  echo json_encode(
 		      array("status"=>"error", "message" => "No customers found.")
 		  );
@@ -173,6 +181,7 @@ switch ($request) {
 			echo json_encode(
 		    array("status"=>"error", "message" => "You must provide a customer id to delete.")
 		  );
+		  return;
 		}
 	  if ($customer->delete($customer_id)) {
 	  	$output["status"] =  "success";

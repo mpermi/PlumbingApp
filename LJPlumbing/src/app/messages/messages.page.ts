@@ -21,7 +21,11 @@ export class MessagesPage implements OnInit {
 
   ngOnInit() {
   	this.messageService.getMessagesByDirection('incoming').subscribe(result => {
-      this.incomingMessages = result.data;
+      if (result.status == 'success') {
+        this.incomingMessages = result.data;
+      } else {
+        this.showAlert(result.data, 'danger');
+      }
     });
   }
 

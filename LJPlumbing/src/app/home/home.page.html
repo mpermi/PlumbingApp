@@ -6,7 +6,10 @@
 
 <ion-content>
   <ion-grid>
-    <ion-row class="welcome"><h5>Welcome, Wes!</h5></ion-row><br><br>
+    <ion-row class="welcome">
+      <ion-col><h5>Welcome, Wes!</h5></ion-col>
+      <ion-col id="logout"><ion-icon name="log-out-outline" (click)="logout()"></ion-icon></ion-col>
+    </ion-row><br><br>
     <ion-row>
       <ion-col size="6">
         <img src="assets/images/inbox.png" routerLink="/messages" routerDirection="root" />

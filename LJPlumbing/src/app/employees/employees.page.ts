@@ -22,7 +22,11 @@ export class EmployeesPage implements OnInit {
 
   ngOnInit() {
   	this.employeeService.getEmployees().subscribe(result => {
-      this.employees = result.data;
+      if (result.status == 'success') {
+        this.employees = result.data;
+      } else {
+        this.showAlert(result.data, 'danger');
+      }
     });
 
   }
@@ -119,7 +123,11 @@ export class EmployeesPage implements OnInit {
 
   public loadEmployees() {
     this.employeeService.getEmployees().subscribe(result => {
-      this.employees = result.data;
+      if (result.status == 'success') {
+        this.employees = result.data;
+      } else {
+        this.showAlert(result.data, 'danger');
+      }
     });
   }
 

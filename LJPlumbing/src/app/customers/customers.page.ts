@@ -3,6 +3,7 @@ import { AlertController, ModalController, ToastController } from '@ionic/angula
 import { EditCustomerPage } from '../modal/edit-customer/edit-customer.page';
 import { CustomerService } from '../services/customer.service';
 import { ViewCustomerPage } from '../modal/view-customer/view-customer.page';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-customers',
@@ -17,12 +18,17 @@ export class CustomersPage implements OnInit {
   	private alertCtrl: AlertController,
     private modalCtrl: ModalController,
     private customerService: CustomerService,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private router: Router
   ) { }
 
   ngOnInit() {
   	this.customerService.getCustomers().subscribe(result => {
-      this.customers = result.data;
+      if (result.status == 'success') {
+        this.customers = result.data;
+      } else {
+        this.showAlert(result.data, 'danger');
+      }
     });
   }
 
@@ -120,7 +126,11 @@ export class CustomersPage implements OnInit {
 
   public loadCustomers() {
     this.customerService.getCustomers().subscribe(result => {
-      this.customers = result.data;
+      if (result.status == 'success') {
+        this.customers = result.data;
+      } else {
+        this.showAlert(result.data, 'danger');
+      }
     });
   }
 
@@ -134,4 +144,14 @@ export class CustomersPage implements OnInit {
     });
   }	 
 
+  public sendMessage(from_phone, customer_id) {
+    let navParams: NavigationExtras = {
+      queryParams: {
+        from_phone: JSON.stringify(from_phone),
+        customer_id: JSON.stringify(customer_id)
+      }
+    };
+
+    this.router.navigate(['view-message'], navParams);
+  }
 }

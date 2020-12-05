@@ -1,13 +1,18 @@
 <?php
 // required headers
 header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
 
 //database config file and class
 include_once 'config/core.php';
 include_once 'config/database.php';
 include_once 'classes/title.php';
-  
+require_once 'jwt/src/BeforeValidException.php';
+require_once 'jwt/src/ExpiredException.php';
+require_once 'jwt/src/SignatureInvalidException.php';
+require_once 'jwt/src/JWT.php';
+
+use \Firebase\JWT\JWT;
+
 // instantiate database and title object
 $database = new Database();
 $db = $database->connect();
@@ -23,8 +28,17 @@ if ($_SERVER['REQUEST_METHOD'] =='GET') {
 }
 
 $title_id = isset($data['title_id']) ? $data['title_id'] : '';
+$token = isset($data['token']) ? $data['token'] : '';
 $request = isset($data['request']) ? $data['request'] : '';
 $output=array();
+
+//validate login token
+try {
+	$decoded_token = JWT::decode($token, $key, array('HS256'));
+} catch (Exception $e) {
+  echo json_encode(array("status" => "error", "data" => "Authentication failed. " . $e->getMessage()));
+  return;
+}
 
 switch ($request) {
 	case "find":
@@ -44,11 +58,9 @@ switch ($request) {
 		    $output["data"][] = $result;
 		  }
 
-		  //http_response_code(200);
 		  $output["status"] =  "success";
 		  echo json_encode($output);
 		} else {
-		  //http_response_code(404);
 		  echo json_encode(
 		      array("status"=>"error", "message" => "No titles found.")
 		  );

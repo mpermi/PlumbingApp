@@ -19,7 +19,7 @@
 			<ion-col size="12">
 			  <ion-list lines="full">
 			    <ion-item *ngFor="let customer of customers">
-			      <ion-col size='8'>
+			      <ion-col size='7'>
 			      	<ion-row>
 		            <span class="name"><h4>{{customer.first_name}} {{customer.last_name}}</h4></span>
 	          	</ion-row>
@@ -32,7 +32,8 @@
 		            <ion-label class="value" color="dark" >{{customer.phone}} </ion-label>
 	          	</ion-row>
 			      </ion-col>
-			      <ion-col class="actions" size='4'>
+			      <ion-col class="actions" size='5'>
+			      	<ion-icon *ngIf="customer.phone != '' && customer.phone !== null" name="mail-open-outline" color="success" (click)="sendMessage(customer.phone, customer.customer_id)"></ion-icon>
 			        <ion-icon name="search" color="view" (click)="viewCustomer(customer)"></ion-icon>
 			        <ion-icon name="create" color="edit" (click)="editCustomer(customer)"></ion-icon>
 			        <ion-icon name="trash" color="danger" (click)="deleteCustomerAlert(customer)"></ion-icon>
