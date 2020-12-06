@@ -36,7 +36,7 @@ $phone = isset($data['phone']) ? $data['phone'] : '';
 $token = isset($data['token']) ? $data['token'] : '';
 $request = isset($data['request']) ? $data['request'] : '';
 $output=array();
-file_put_contents('/tmp/zzzzzzzzzzzzzzzzz.php', $request);
+
 //validate login token
 try {
 	$decoded_token = JWT::decode($token, $key, array('HS256'));
@@ -70,6 +70,7 @@ switch ($request) {
 	        "message" => $message,
 	        "read" => $read,
 	        "uuid" => $uuid,
+	        "status" => $status,
 		    );
 
 		    $output["data"][] = $result;
@@ -113,6 +114,7 @@ switch ($request) {
 	        "message" => $message,
 	        "read" => $read,
 	        "uuid" => $uuid,
+	        "status" => $status
 		    );
 
 		    $output["data"][] = $result;
@@ -170,6 +172,7 @@ switch ($request) {
 	        "message" => $message,
 	        "read" => $read,
 	        "uuid" => $uuid,
+	        "status" => $status
 		    );
 
 		    $output["data"][] = $result;

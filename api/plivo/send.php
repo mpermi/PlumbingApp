@@ -15,8 +15,6 @@
   $database = new Database();
   $db = $database->connect();
 
-  //$decoded_data = json_decode(file_get_contents('php://input')); 
-
   $from_phone = $plivo_phone;
   $to_phone = isset($_POST['phone']) ? $_POST['phone'] : '';
   $message_text = isset($_POST['message']) ? $_POST['message'] : '';
@@ -33,7 +31,7 @@
   $params['src'] = $from_phone;
   $params['dst'] = $to_phone;
   $params['text'] = $message_text;
-  $parmas['url'] = 'https://354c1d3d5fd8.ngrok.io/api/plivo/callback.php';
+  $params['url'] = 'https://354c1d3d5fd8.ngrok.io/api/plivo/callback.php';
 
   $plivo_api = new Plivo_API();
   $response = $plivo_api->send_sms($params);
@@ -42,7 +40,6 @@
   //add the new message that was sent
   $message = new Message($db);
 
-  //TODO search for customer record when that class is done
   $message->customer_id = $customer_id;
   $message->employee_id = $employee_id;
   $message->date = date('Y-m-d H:i:s');
@@ -52,6 +49,7 @@
   $message->message = $message_text;
   $message->uuid = isset($decoded_response['message_uuid']) ? $decoded_response['message_uuid'][0] : '';
   $message->read = 1;
+  $message->status = 'delivered';
   $message->created = date('Y-m-d H:i:s');
   
 

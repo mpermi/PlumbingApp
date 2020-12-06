@@ -12,6 +12,7 @@ import { ViewEmployeePage } from '../modal/view-employee/view-employee.page';
 export class EmployeesPage implements OnInit {
 	employees = null;
   toast = null;
+  currentEmployee = null;
 
   constructor(
   	private alertCtrl: AlertController,
@@ -25,10 +26,17 @@ export class EmployeesPage implements OnInit {
       if (result.status == 'success') {
         this.employees = result.data;
       } else {
-        this.showAlert(result.data, 'danger');
+        this.showAlert(result.message, 'danger');
       }
     });
 
+    this.employeeService.getLoggedInEmployee().subscribe(result => {
+      if (result.status == 'success') {
+        this.currentEmployee = result.data;
+      } else {
+        this.showAlert(result.message, 'danger');
+      }
+    });  
   }
 
   async viewEmployee(employee) {
@@ -126,7 +134,7 @@ export class EmployeesPage implements OnInit {
       if (result.status == 'success') {
         this.employees = result.data;
       } else {
-        this.showAlert(result.data, 'danger');
+        this.showAlert(result.message, 'danger');
       }
     });
   }

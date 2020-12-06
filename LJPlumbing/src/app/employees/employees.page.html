@@ -4,7 +4,7 @@
 		<ion-buttons slot="start">
       <ion-back-button text="" defaultHref="home"></ion-back-button>
     </ion-buttons>
-    <ion-buttons slot="end">
+    <ion-buttons *ngIf="currentEmployee?.title =='Admin'" slot="end">
       <ion-button (click)="addEmployee()">
         <ion-icon name="add" slot="icon-only"></ion-icon>
       </ion-button>
@@ -29,8 +29,8 @@
 			      </ion-col>
 			      <ion-col class="actions" size='4'>
 			        <ion-icon name="search" color="view" (click)="viewEmployee(employee)"></ion-icon>
-			        <ion-icon name="create" color="edit" (click)="editEmployee(employee)"></ion-icon>
-			        <ion-icon name="trash" color="danger" (click)="deleteEmployeeAlert(employee)"></ion-icon>
+			        <ion-icon *ngIf="currentEmployee?.title =='Admin'" name="create" color="edit" (click)="editEmployee(employee)"></ion-icon>
+			        <ion-icon *ngIf="currentEmployee?.title =='Admin'" name="trash" color="danger" (click)="deleteEmployeeAlert(employee)"></ion-icon>
 			      </ion-col>
 			    </ion-item>
 			  </ion-list>

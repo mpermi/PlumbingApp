@@ -84,6 +84,34 @@ class Job {
     return $result;
   }
 
+  //update existing job
+  public function update($job_id) {
+    $date = filter_var($this->date, FILTER_SANITIZE_STRING);
+    $customer_id = filter_var($this->customer_id, FILTER_SANITIZE_STRING);
+    $issue = filter_var($this->issue, FILTER_SANITIZE_STRING);
+    $employee_id = filter_var($this->employee_id, FILTER_SANITIZE_STRING);
+
+    $query = "UPDATE
+                " . $this->table_name . "
+              SET
+                  date = :date,
+                  customer_id = :customer_id,
+                  issue = :issue,
+                  employee_id = :employee_id
+              WHERE
+                  job_id = :job_id";
+  
+    $result = $this->connection->prepare($query);
+    $result->bindParam(':job_id', $job_id);
+    $result->bindParam(':customer_id', $customer_id);
+    $result->bindParam(':issue', $issue);
+    $result->bindParam(':employee_id', $employee_id);
+    $result->bindParam(':date', $date);
+    $result->execute();
+
+    return $result;
+  }
+
     //delete job
   public function delete($job_id) {
     $query = "DELETE FROM

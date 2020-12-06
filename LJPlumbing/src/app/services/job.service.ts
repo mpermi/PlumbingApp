@@ -29,5 +29,13 @@ export class JobService {
   	let body = new HttpParams().set('request', 'delete').set('job_id', job_id).set('token', this.authService.token).toString();
 
   	return this.http.post(this.apiURL, body, {headers: headers});
-  }   
+  }
+
+  updateJob(jobForm): Observable<any> {
+    jobForm.request='update';
+    let headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded'});
+    let body = new HttpParams({fromObject: jobForm}).set('token', this.authService.token).toString();
+
+    return this.http.post(this.apiURL, body, {headers: headers});
+  }    
 }

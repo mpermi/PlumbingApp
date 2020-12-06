@@ -24,7 +24,7 @@ export class MessagesPage implements OnInit {
       if (result.status == 'success') {
         this.incomingMessages = result.data;
       } else {
-        this.showAlert(result.data, 'danger');
+        this.showAlert(result.message, 'danger');
       }
     });
   }

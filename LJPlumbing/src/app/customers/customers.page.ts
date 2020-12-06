@@ -27,7 +27,7 @@ export class CustomersPage implements OnInit {
       if (result.status == 'success') {
         this.customers = result.data;
       } else {
-        this.showAlert(result.data, 'danger');
+        this.showAlert(result.message, 'danger');
       }
     });
   }
@@ -129,7 +129,7 @@ export class CustomersPage implements OnInit {
       if (result.status == 'success') {
         this.customers = result.data;
       } else {
-        this.showAlert(result.data, 'danger');
+        this.showAlert(result.message, 'danger');
       }
     });
   }

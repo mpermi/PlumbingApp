@@ -116,7 +116,7 @@ switch ($request) {
 		        "phone" => $phone
 		    );
 
-		    $output["data"][] = $result;
+		    $output["data"] = $result;
 		  }
 
 		  $output["status"] =  "success";

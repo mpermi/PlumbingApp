@@ -18,6 +18,7 @@ class Message {
   public $message;
   public $read;
   public $uuid;
+  public $status;
   public $created;
 
   public function __construct($db){
@@ -45,6 +46,7 @@ class Message {
                   message,
                   `read`,
                   uuid,
+                  status,
                   messages.created
 		          FROM
 		              " . $this->table_name . 
@@ -81,6 +83,7 @@ class Message {
                   message,
                   `read`,
                   uuid,
+                  status,
                   messages.created
               FROM
                   " . $this->table_name . 
@@ -117,6 +120,7 @@ class Message {
                   message,
                   `read`,
                   uuid,
+                  status,
                   messages.created
               FROM
                   " . $this->table_name . 
@@ -155,10 +159,12 @@ class Message {
       $sql = " WHERE messages.uuid = :uuid";
     }
     $read = filter_var($this->read, FILTER_SANITIZE_STRING);
+    $status = filter_var($this->status, FILTER_SANITIZE_STRING);
     $query = "UPDATE
                 " . $this->table_name . "
               SET
-                  `read` = :read
+                  `read` = :read,
+                  status = :status
               " . $sql;
   
     $result = $this->connection->prepare($query);
@@ -169,6 +175,7 @@ class Message {
       $result->bindParam(':uuid', $uuid);
     }
     $result->bindParam(':read', $read);
+    $result->bindParam(':status', $status);
     $result->execute();
 
     return $result;
@@ -185,12 +192,13 @@ class Message {
     $customer_id = filter_var($this->customer_id, FILTER_SANITIZE_STRING);
     $uuid = filter_var($this->uuid, FILTER_SANITIZE_STRING);
     $read = filter_var($this->read, FILTER_SANITIZE_STRING);
+    $status = filter_var($this->status, FILTER_SANITIZE_STRING);
     $created = filter_var($this->created, FILTER_SANITIZE_STRING);
 
     $query = "INSERT INTO
                 " . $this->table_name . "
-                (date, to_phone, from_phone, direction, message, employee_id, customer_id, uuid, `read`, created)
-              VALUES (:date, :to_phone, :from_phone, :direction, :message, :employee_id, :customer_id, :uuid, :read, :created)";
+                (date, to_phone, from_phone, direction, message, employee_id, customer_id, uuid, `read`, status, created)
+              VALUES (:date, :to_phone, :from_phone, :direction, :message, :employee_id, :customer_id, :uuid, :read, :status, :created)";
   
     $result = $this->connection->prepare($query);
     $result->bindParam(':date', $date);
@@ -202,6 +210,7 @@ class Message {
     $result->bindParam(':customer_id', $customer_id);
     $result->bindParam(':uuid', $uuid);
     $result->bindParam(':read', $read);
+    $result->bindParam(':status', $status);
     $result->bindParam(':created', $created);
     $result->execute();
 
@@ -229,6 +238,7 @@ class Message {
                   message,
                   `read`,
                   uuid,
+                  status,
                   messages.created
               FROM
                   " . $this->table_name . 

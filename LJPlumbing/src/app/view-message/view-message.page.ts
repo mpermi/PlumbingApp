@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from '../services/message.service';
 import { ToastController} from '@ionic/angular';
+import { EmployeeService } from '../services/employee.service';
 
 @Component({
   selector: 'app-view-message',
@@ -16,12 +17,14 @@ export class ViewMessagePage implements OnInit {
 	sendMessageText = '';
 	sendMesssageForm;
 	toast = null;
+  currentEmployee = null;
 
   constructor(
   	private activatedRoute: ActivatedRoute, 
   	private router: Router,
   	private messageService: MessageService,
-  	private toastCtrl: ToastController) { 
+  	private toastCtrl: ToastController,
+    private employeeService: EmployeeService,) { 
 
     this.activatedRoute.queryParams.subscribe(params => {
       if (params && params.from_phone) {
@@ -39,6 +42,14 @@ export class ViewMessagePage implements OnInit {
         this.showAlert(result.data, 'danger');
       }
     });
+
+    this.employeeService.getLoggedInEmployee().subscribe(result => {
+      if (result.status == 'success') {
+        this.currentEmployee = result.data;
+      } else {
+        this.showAlert(result.data, 'danger');
+      }
+    });      
   }
 
   public loadConversation() {
@@ -52,8 +63,7 @@ export class ViewMessagePage implements OnInit {
   }
 
   sendMesssage() {
-  	//TODO replace with a logged in employee id
-    this.messageService.sendMessage('2', this.from_phone, this.customer_id, this.sendMessageText).subscribe(result => {
+    this.messageService.sendMessage(this.currentEmployee.employee_id, this.from_phone, this.customer_id, this.sendMessageText).subscribe(result => {
       if (result.status =='success') {
       	this.sendMessageText = '';
         this.loadConversation();

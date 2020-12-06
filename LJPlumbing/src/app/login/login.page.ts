@@ -22,7 +22,6 @@ export class LoginPage implements OnInit {
 
   login() {
     this.authService.login(this.username, this.password).subscribe(result => {
-      console.log(result);
       if (result.status =='success') {
         this.authService.setToken(result.data);
       } else {

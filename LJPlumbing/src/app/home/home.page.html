@@ -7,7 +7,7 @@
 <ion-content>
   <ion-grid>
     <ion-row class="welcome">
-      <ion-col><h5>Welcome, Wes!</h5></ion-col>
+      <ion-col><h5>Welcome, {{currentEmployee?.first_name}}!</h5></ion-col>
       <ion-col id="logout"><ion-icon name="log-out-outline" (click)="logout()"></ion-icon></ion-col>
     </ion-row><br><br>
     <ion-row>

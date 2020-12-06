@@ -98,6 +98,22 @@ switch ($request) {
 
 	  echo json_encode($output);
 		break;
+	case "update":
+	  $job->date = isset($data['date']) ? $data['date'] : '';
+	  $job->customer_id = isset($data['customer_id']) ? $data['customer_id'] : '';
+	  $job->issue = isset($data['issue']) ? $data['issue'] : '';
+	  $job->employee_id = isset($data['employee_id']) ? $data['employee_id'] : '';
+
+	  if ($job->update($job_id)) {
+	  	$output["status"] =  "success";
+			$output["data"] =  "Job updated";
+	  } else {
+	  	$output["status"] =  "error";
+			$output["data"] =  "There was an error updating job";
+	  }
+		
+	  echo json_encode($output);
+		break;		
 	case "delete":
 		if (!$job_id) {
 			echo json_encode(

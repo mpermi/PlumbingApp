@@ -27,6 +27,9 @@
 			{{message.date}}
 		</div>
 	</ion-col>
+	<ion-col size="9" offset="3" *ngIf="message.direction == 'outgoing' && (message.status != 'delivered' || message.uuid =='')" >
+		<ion-label id="status_warning" color="danger"><b><ion-icon name="warning-outline"></ion-icon>failed</b><br></ion-label>
+	</ion-col>
 </ion-row>
 
 </ion-content>

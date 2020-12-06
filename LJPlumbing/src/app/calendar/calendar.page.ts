@@ -121,7 +121,7 @@ export class CalendarPage implements OnInit {
         });
         this.calendarComponent.loadEvents();
       } else {
-        this.showAlert(result.data, 'danger');
+        this.showAlert(result.message, 'danger');
       }
     });
   }

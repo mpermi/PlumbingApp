@@ -12,6 +12,7 @@ import { AuthService } from '../services/auth.service';
 export class HomePage {
 	unreadMessageTotal = 0;
   toast = null;
+  currentEmployee = null;
 
   constructor(
   	private messageService: MessageService,
@@ -28,6 +29,14 @@ export class HomePage {
         this.showAlert(result.data, 'danger');
       }
     });
+
+    this.employeeService.getLoggedInEmployee().subscribe(result => {
+      if (result.status == 'success') {
+        this.currentEmployee = result.data;
+      } else {
+        this.showAlert(result.data, 'danger');
+      }
+    });    
   }
 
   async showAlert(message, color) {

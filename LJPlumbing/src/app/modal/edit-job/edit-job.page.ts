@@ -70,7 +70,7 @@ export class EditJobPage implements AfterViewInit {
         }
       });
     } else {
-      this.jobForm.updateJob(this.jobForm).subscribe(result => {
+      this.jobService.updateJob(this.jobForm).subscribe(result => {
         if (result.status =='success') {
           this.modalCtrl.dismiss({event: this.jobForm});
         } else {
@@ -84,7 +84,7 @@ export class EditJobPage implements AfterViewInit {
     this.viewTitle = title;
   }
  
-  onTimeSelected(ev) {    
+  onTimeSelected(ev) {
     this.jobForm.date = new Date(ev.selectedTime);
   }
  
