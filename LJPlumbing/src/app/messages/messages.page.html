@@ -15,6 +15,7 @@
 			    <ion-item *ngFor="let message of incomingMessages" (click)="viewConversation(message.message_id, message.from_phone, message.customer_id)">
 			    	<ion-label>
 					    <h2>{{messagessdsds.date | date:'short'}}</h2>
+					    <h3>{{messagessdsds.date}}</h3>
 			      	<p *ngIf="message.customer_id === null && message.direction == 'incoming'">{{message.from_phone}}</p>
 			      	<p *ngIf="message.customer_id === null && message.direction == 'outgoing'">{{message.to_phone}}</p>
 			      	<p *ngIf="message.customer_id !== null">{{message.customer_first_name}} {{message.customer_last_name}}</p>
